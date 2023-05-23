@@ -1,4 +1,0 @@
-/home/rain/src/alg/build/CMakeFiles/generator.dir
-/home/rain/src/alg/build/CMakeFiles/scheduler.dir
-/home/rain/src/alg/build/CMakeFiles/edit_cache.dir
-/home/rain/src/alg/build/CMakeFiles/rebuild_cache.dir
