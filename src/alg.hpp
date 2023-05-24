@@ -337,3 +337,32 @@ public:
         return true;
     }
 };
+
+
+//6. Zigzag Conversion
+class Solution_zigzag_conversion {
+public:
+    string convert(string s, int numRows) {
+     if(numRows<=1)   
+        return s;
+    std::vector<std::string> list(numRows,"");
+    int currentline=0;
+    bool reachedEdge=true;
+    for(int i=0;i<s.length();++i){
+        if(currentline==0 || currentline==list.size()-1){
+            reachedEdge=!reachedEdge;
+        }
+        list.at(currentline) +=s.at(i);
+        if(!reachedEdge){
+            currentline++;
+        }else{
+            currentline--;
+        }
+    }
+    std::string result="";
+    for(auto str: list){
+        result+=str;
+    }
+    return result;
+    }
+};
