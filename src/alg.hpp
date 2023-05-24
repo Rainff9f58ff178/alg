@@ -46,6 +46,7 @@ Output: [8,9,9,9,0,0,0,1]
 #include<list>
 #include<vector>
 #include<string>
+#include<cmath>
 using namespace std;
  struct ListNode {
      int val;
@@ -365,4 +366,64 @@ public:
     }
     return result;
     }
+};
+
+//7. Reverse Integer
+class Solution_reverse_integer {
+public:
+    int reverse(int x) {
+        long x1=(long)x;
+        int a= -pow(2, 31);
+        if(x1>= pow(2, 31) - 1 || x1<= a)
+            return 0;
+
+        if(x<10 && x>-10)
+            return x;
+        
+        cout<<"x greater than 10"<<endl;
+        bool is_zheng=x1>0? true:false;
+        if(!is_zheng)
+            x1=-x1;
+        int ditgit_num = __get_ditgit_num(x1);
+
+        int multi_factor=ditgit_num-1;
+
+        std::vector<long> v;
+        for(int i=0;i<ditgit_num;++i){
+            int num = (x1/__m_num(i)) % 10;
+            v.push_back(num);
+        }
+        long result=0;
+        for(auto e : v){
+            cout<<e<<" ";
+            result+=e*__m_num(multi_factor);
+            multi_factor--;        
+        }
+        if(result>= pow(2, 31) - 1 || result<= a)
+            return 0;
+        if(!is_zheng){
+            result=-result;
+        }
+            
+        return result;
+    }
+    int __m_num(int n){
+        int num=1;
+        while(n!=0){
+            num*=10;
+            n--;
+        }
+        return num;
+        
+    }
+    int __get_ditgit_num(int x){
+        int digit_num=0;
+        while(x!=0){
+
+            x/=10;
+            digit_num++;
+        }
+        return digit_num;
+    }
+    
 };
