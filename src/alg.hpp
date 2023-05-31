@@ -1,4 +1,4 @@
-
+#include<limits.h>
 
 
 
@@ -47,7 +47,35 @@ Output: [8,9,9,9,0,0,0,1]
 #include<vector>
 #include<string>
 #include<cmath>
+#include<inttypes.h>
+#include<string.h>
 using namespace std;
+
+
+
+//string patten match
+class Solution_10 {
+public:
+    bool isMatch(string s, string p) {
+        int n = s.length();
+        int m = p.length();
+
+        bool dp[n+1][m+1];
+        memset(dp,false,sizeof(dp));
+        dp[0][0]=true;
+
+        for(int i=0;i<=n;++i){
+            for(int j=1;j<=m;++j){
+                if(p[j-1]=='*'){
+                    dp[i][j]= dp[i][j-2] || ( i>0 && (s[i-1]==p[j-2] || p[j-2] == '.' ) && dp[i-1][j]);
+                }else{
+                    dp[i][j] = i>0 && (s[i-1] == p[j-1] || p[j-1] == '.') && dp[i-1][j-1];
+                }
+            }
+        }
+        return dp[n][m];
+    }
+};
  struct ListNode {
      int val;
      ListNode *next;
@@ -369,64 +397,20 @@ public:
 };
 
 //7. Reverse Integer
-class Solution_reverse_integer {
+class Solution_7 {
 public:
     int reverse(int x) {
-        long x1=(long)x;
-        int a= -pow(2, 31);
-        if(x1>= pow(2, 31) - 1 || x1<= a)
-            return 0;
-
-        if(x<10 && x>-10)
-            return x;
         
-        cout<<"x greater than 10"<<endl;
-        bool is_zheng=x1>0? true:false;
-        if(!is_zheng)
-            x1=-x1;
-        int ditgit_num = __get_ditgit_num(x1);
-
-        int multi_factor=ditgit_num-1;
-
-        std::vector<long> v;
-        for(int i=0;i<ditgit_num;++i){
-            int num = (x1/__m_num(i)) % 10;
-            v.push_back(num);
-        }
-        long result=0;
-        for(auto e : v){
-            cout<<e<<" ";
-            result+=e*__m_num(multi_factor);
-            multi_factor--;        
-        }
-        if(result>= pow(2, 31) - 1 || result<= a)
-            return 0;
-        if(!is_zheng){
-            result=-result;
-        }
-            
-        return result;
-    }
-    int __m_num(int n){
-        int num=1;
-        while(n!=0){
-            num*=10;
-            n--;
-        }
-        return num;
-        
-    }
-    int __get_ditgit_num(int x){
-        int digit_num=0;
-        while(x!=0){
-
+        int r=0;
+        while(x){
+            if(r > INT_MAX/10 || r < INT_MIN/10 ) return 0;
+            r = r*10+x%10;
             x/=10;
-            digit_num++;
         }
-        return digit_num;
+        return r;
     }
-    
 };
+
 /**
  * Definition for a binary tree node.
  struct TreeNode {
@@ -470,5 +454,120 @@ public:
         cur->right = __builder(inorder,postorder,mid+1,right);
         cur->left = __builder(inorder,postorder,left,mid-1);
         return cur;
+    }
+};
+
+//string to int
+class Solution_8 {
+public:
+    int myAtoi(string s) {
+        
+        int length = s.length();
+        if(length==0)
+            return 0;
+        int i=0;
+        while(i<length and  s[i]==' '){
+            i++;
+        }
+        s=s.substr(i);
+
+        int sign = s[0]=='-' ? -1: +1;
+
+        i = (s[0]=='+' || s[0]=='-') ? 1: 0;
+        long ans=0;
+        while(i<s.length()){
+            if(!isdigit(s[i])) break;
+            ans=ans*10+s[i]-'0';
+            if(sign==-1 and -1*ans < INT_MIN) return INT_MIN;
+            if(sign==1 and ans>INT_MAX) return INT_MAX;
+            ++i;
+        }
+
+        return (int)(sign*ans);
+    }
+   
+};
+
+//once isPalindrome
+class Solution_9 {
+public:
+    bool isPalindrome(int x) {
+        if(x<0)
+            return false;
+        if(x==0)
+            return true;
+
+        int i=0;
+        int j = __get_digit_num(x)-1;
+        
+        while(i<j){
+            if(__getditgit(x,i)!=__getditgit(x,j))
+                return false;
+            i++;
+            j--;
+        }
+        return true;
+
+    }
+    int __getditgit(int x,int index){
+        int factor =1;
+        while(index){
+            factor*=10;
+            index--;
+        }
+        int digitnum = (x/factor) %10;
+        return digitnum;
+    }
+    int __get_digit_num(int x){
+        int digit=0;
+        while(x){
+            digit++;
+            x/=10;
+        }
+        return digit;
+    }
+};
+
+//11. Container With Most Water
+class Solution_11 {
+public:
+    int maxArea(vector<int>& height) {
+        if( ! (height.size()>= 2 && height.size()<=std::pow(10,5) ) )
+            return 0;
+        int max_water=0;
+        int n = height.size();
+        int i=0;
+        int j =n-1;
+        while(i<j){
+            if(height[i] > height[j]){
+                max_water  =std::max(max_water,(j-i)*height[j]);
+                j--;
+            }else{
+                max_water = std::max(max_water,(j-i)*height[i]);
+                i++;
+            }
+        }
+        return max_water;
+    }
+};
+
+//12. get the maximum sum of subarray 
+class Solution_12 {
+public:
+    int maxSubArray(vector<int>& nums) {
+        
+        int max= INT_MIN;
+        int meh = 0;
+        for(int i=0;i<nums.size();++i){
+            meh +=nums[i];
+            if(meh>max){
+                max = meh;
+            }
+            if(meh < 0) {
+                meh =0;
+            }
+
+        }
+        return max;
     }
 };
